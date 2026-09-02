@@ -1199,14 +1199,16 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
 
         var rows = subNode.rows;
         var IMG_SIZE = 24;
-        var textX = 14 + IMG_SIZE + 5;
-        var rowH = IMG_SIZE + 6;
+        var textXWithImg = 14 + IMG_SIZE + 5;
+        var rowHWithImg = IMG_SIZE + 6;
+        var textXNoImg = 14;
+        var rowHNoImg = 15;
 
         // column labels
         doc.setFont("WorkSans", "bold");
         doc.setFontSize(7.5);
         doc.setTextColor(muted[0], muted[1], muted[2]);
-        doc.text("ARTIKL", textX, cursorY + 4);
+        doc.text("ARTIKL", 14, cursorY + 4);
         doc.text("KOLIČINA", pageW - 14, cursorY + 4, { align: "right" });
         cursorY += 7;
         doc.setDrawColor(225, 218, 206);
@@ -1215,17 +1217,17 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
         cursorY += 4;
 
         rows.forEach(function(r){
+          var hasImg = !!r.slika;
+          var textX = hasImg ? textXWithImg : textXNoImg;
+          var rowH = hasImg ? rowHWithImg : rowHNoImg;
+
           if(cursorY + rowH > 280){ doc.addPage(); cursorY = 20; }
 
-          if(r.slika){
+          if(hasImg){
             try{ doc.addImage(r.slika, 14, cursorY, IMG_SIZE, IMG_SIZE); }catch(e){}
-          } else {
-            doc.setDrawColor(225, 218, 206);
-            doc.setLineWidth(0.3);
-            doc.rect(14, cursorY, IMG_SIZE, IMG_SIZE);
           }
 
-          var midY = cursorY + IMG_SIZE / 2;
+          var midY = cursorY + rowH / 2 - 2;
 
           doc.setFont("WorkSans", "bold");
           doc.setFontSize(12.5);
